@@ -1,9 +1,9 @@
-FROM microsoft/dotnet:2.1-aspnetcore-runtime AS base
+FROM microsoft/dotnet:6.0-aspnetcore-runtime AS base
 WORKDIR /app
 EXPOSE 56053
 EXPOSE 44301
 
-FROM microsoft/dotnet:2.1-sdk AS build
+FROM microsoft/dotnet:6.0-sdk AS build
 WORKDIR /src
 COPY ["Derdeyn.GraduaatIconizer.Web/Derdeyn.GraduaatIconizer.Web.csproj", "Derdeyn.GraduaatIconizer.Web/"]
 RUN dotnet restore "Derdeyn.GraduaatIconizer.Web/Derdeyn.GraduaatIconizer.Web.csproj"

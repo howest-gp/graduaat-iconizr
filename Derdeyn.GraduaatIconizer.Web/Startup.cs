@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Derdeyn.GraduaatIconizer.Web.Models;
+﻿using Derdeyn.GraduaatIconizer.Web.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 
 namespace Derdeyn.GraduaatIconizer.Web
 {
@@ -35,11 +30,11 @@ namespace Derdeyn.GraduaatIconizer.Web
             });
 
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services.AddControllersWithViews();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
@@ -57,29 +52,33 @@ namespace Derdeyn.GraduaatIconizer.Web
             app.UseStaticFiles();
             app.UseCookiePolicy();
 
-            app.UseMvc(routes =>
+            app.UseRouting();
+
+            app.UseAuthorization();
+
+            app.UseEndpoints(routes =>
             {
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "generate",
-                    template: "generate/{top}/{bottom}/{isRoot}",
+                    pattern: "generate/{top}/{bottom}/{isRoot}",
                     defaults: new { Action = "Generate", Controller = "Home", Area = "" }
                 );
 
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "about",
-                    template: "about",
-                    defaults: new { Action = "About", Controller = "Home", Area= ""}
+                    pattern: "about",
+                    defaults: new { Action = "About", Controller = "Home", Area = "" }
                 );
 
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "error",
-                    template: "error/{statusCode?}",
+                    pattern: "error/{statusCode?}",
                     defaults: new { Action = "Index", Controller = "Error", Area = "" }
                 );
 
-                routes.MapRoute(
+                routes.MapControllerRoute(
                     name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }
     }
